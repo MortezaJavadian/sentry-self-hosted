@@ -1,0 +1,5 @@
+# Cloned Sentry self-hosted repository
+self-hosted/
+
+# Nginx configuration
+nginx-sentry.conf
