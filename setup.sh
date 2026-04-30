@@ -322,10 +322,10 @@ display_summary() {
 
     log_section "Configuration Summary"
 
-    echo "${GREEN}Domain:${NC} https://${domain}"
-    echo "${GREEN}Retention:${NC} ${retention} days"
-    echo "${GREEN}Mail:${NC} ${mail_hostname}"
-    echo "${GREEN}Network:${NC} ${network}"
+    echo -e "${GREEN}Domain:${NC} https://${domain}"
+    echo -e "${GREEN}Retention:${NC} ${retention} days"
+    echo -e "${GREEN}Mail:${NC} ${mail_hostname}"
+    echo -e "${GREEN}Network:${NC} ${network}"
     echo ""
 }
 
@@ -333,20 +333,20 @@ display_summary() {
 display_next_steps() {
     log_section "Next Steps"
 
-    echo "${GREEN}1. Run installation:${NC}"
+    echo -e "${GREEN}1. Run installation:${NC}"
     echo "   cd self-hosted"
     echo "   ./install.sh"
     echo ""
 
-    echo "${GREEN}2. Start services:${NC}"
+    echo -e "${GREEN}2. Start services:${NC}"
     echo "   docker compose --env-file .env --env-file .env.custom up -d"
     echo ""
 
-    echo "${GREEN}3. Copy Nginx configuration:${NC}"
+    echo -e "${GREEN}3. Copy Nginx configuration:${NC}"
     echo "   cp ../nginx-sentry.conf /root/nginx-proxy/conf.d/sentry.conf"
     echo ""
 
-    echo "${GREEN}4. Reload Nginx:${NC}"
+    echo -e "${GREEN}4. Reload Nginx:${NC}"
     echo "   cd /root/nginx-proxy"
     echo "   docker compose exec nginx nginx -s reload"
     echo ""
@@ -372,7 +372,8 @@ main() {
     echo ""
     display_summary "$DOMAIN" "$RETENTION" "$MAIL_HOSTNAME" "$NETWORK"
 
-    read -p "  ${BLUE}Proceed? (yes/no):${NC} " confirm
+    echo -ne "  ${BLUE}Proceed? (yes/no):${NC} "
+    read confirm
     if [[ ! $confirm =~ ^[Yy][Ee][Ss]|[Yy]$ ]]; then
         log_error "Cancelled"
     fi
