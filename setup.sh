@@ -160,13 +160,8 @@ generate_docker_compose_override() {
     log_info "Generating docker-compose.override.yml for network ${network}..."
 
     cat > self-hosted/docker-compose.override.yml <<'OVERRIDE_EOF'
-version: '3.8'
-
 services:
   web:
-    networks:
-      - custom-net
-  worker:
     networks:
       - custom-net
   snuba-api:
@@ -211,6 +206,15 @@ services:
   snuba-subscription-consumer-generic-metrics-distributions:
     networks:
       - custom-net
+  snuba-subscription-consumer-generic-metrics-gauges:
+    networks:
+      - custom-net
+  snuba-subscription-consumer-generic-metrics-counters:
+    networks:
+      - custom-net
+  snuba-subscription-consumer-generic-metrics-sets:
+    networks:
+      - custom-net
   symbolicator:
     networks:
       - custom-net
@@ -229,7 +233,13 @@ services:
   taskbroker:
     networks:
       - custom-net
+  taskscheduler:
+    networks:
+      - custom-net
   postgres:
+    networks:
+      - custom-net
+  pgbouncer:
     networks:
       - custom-net
   redis:
@@ -247,7 +257,25 @@ services:
   seaweedfs:
     networks:
       - custom-net
+  seaweedfs-admin:
+    networks:
+      - custom-net
+  seaweedfs-worker:
+    networks:
+      - custom-net
   smtp:
+    networks:
+      - custom-net
+  nginx:
+    networks:
+      - custom-net
+  post-process-forwarder-errors:
+    networks:
+      - custom-net
+  post-process-forwarder-issue-platform:
+    networks:
+      - custom-net
+  post-process-forwarder-transactions:
     networks:
       - custom-net
 
