@@ -137,6 +137,7 @@ update_config_yml() {
 generate_env_custom() {
     local retention=$1
     local mail_hostname=$2
+    local network=$3
 
     log_info "Generating .env.custom..."
 
@@ -146,6 +147,7 @@ COMPOSE_PROFILES=feature-complete
 SENTRY_EVENT_RETENTION_DAYS=${retention}
 SENTRY_MAIL_HOST=${mail_hostname}
 SENTRY_TASKWORKER_CONCURRENCY=4
+network=${network}
 EOF
 
     log_success "Generated .env.custom"
@@ -167,25 +169,46 @@ services:
   worker:
     networks:
       - custom-net
-  ingest-consumer:
-    networks:
-      - custom-net
-  post-process-forwarder:
-    networks:
-      - custom-net
   snuba-api:
     networks:
       - custom-net
-  snuba-consumer:
+  snuba-errors-consumer:
+    networks:
+      - custom-net
+  snuba-outcomes-consumer:
+    networks:
+      - custom-net
+  snuba-outcomes-billing-consumer:
+    networks:
+      - custom-net
+  snuba-group-attributes-consumer:
     networks:
       - custom-net
   snuba-replacer:
     networks:
       - custom-net
-  snuba-subscription-scheduler:
+  snuba-subscription-consumer-events:
     networks:
       - custom-net
-  snuba-subscription-executor:
+  snuba-transactions-consumer:
+    networks:
+      - custom-net
+  snuba-replays-consumer:
+    networks:
+      - custom-net
+  snuba-issue-occurrence-consumer:
+    networks:
+      - custom-net
+  snuba-metrics-consumer:
+    networks:
+      - custom-net
+  snuba-subscription-consumer-transactions:
+    networks:
+      - custom-net
+  snuba-subscription-consumer-metrics:
+    networks:
+      - custom-net
+  snuba-subscription-consumer-generic-metrics-distributions:
     networks:
       - custom-net
   symbolicator:
@@ -333,6 +356,10 @@ display_summary() {
 display_next_steps() {
     log_section "Next Steps"
 
+    echo -e "${GREEN}0. Create Docker network:${NC}"
+    echo "   docker network create gitlab-net"
+    echo ""
+
     echo -e "${GREEN}1. Run installation:${NC}"
     echo "   cd self-hosted"
     echo "   ./install.sh"
@@ -384,7 +411,7 @@ main() {
     clone_sentry_repo
     copy_config_files
     update_config_yml "$DOMAIN" "$MAIL_HOSTNAME"
-    generate_env_custom "$RETENTION" "$MAIL_HOSTNAME"
+    generate_env_custom "$RETENTION" "$MAIL_HOSTNAME" "$NETWORK"
     generate_docker_compose_override "$NETWORK"
     generate_nginx_config "$DOMAIN"
 
