@@ -74,6 +74,12 @@ Should return HTTP 200.
 Open `https://your-domain` in browser.
 Login with credentials from step 2.
 
+### Step 7: Create another user
+
+```bash
+docker compose exec -it web sentry createuser
+```
+
 ## Configuration
 
 Setup creates:
